@@ -49,13 +49,11 @@ for tweet in fetch_target_tweets:
         try:
             a = tweet.retweeted_status.extended_entities
         except AttributeError as e:
-            #print(tweet.retweeted_status.full_text)
             texts.append(tweet.retweeted_status.full_text)
             media_urls.append("")
 
         #メディア付きツイートなら本文を保存
         else:
-            #print(tweet.retweeted_status.full_text)
             texts.append(tweet.retweeted_status.full_text)
 
             #動画付きツイートなら動画のURLを取得　最もbitrateが高いものにする
@@ -63,28 +61,24 @@ for tweet in fetch_target_tweets:
                 dicts = [i for i in tweet.retweeted_status.extended_entities["media"][0]["video_info"]["variants"] if "bitrate" in i]
                 dicts_2 = [i["bitrate"] for i in dicts]
                 media_urls.append(dicts[dicts_2.index(max(dicts_2))]["url"])
-                #print(dicts[dicts_2.index(max(dicts_2))]["url"])
 
             #画像つきツイートなら画像のURLを保存　オリジナル画質にする
             elif "video_info" not in tweet.retweeted_status.extended_entities:
                 murl = []
                 for i in range(len(tweet.retweeted_status.extended_entities["media"])):
                     murl.append(tweet.retweeted_status.extended_entities["media"][i]["media_url"] + ":orig")
-                    #print(tweet.retweeted_status.extended_entities["media"][0]["media_url"] + ":orig")
                 media_urls.append(murl)
 
 
 #URLから画像・動画を保存、ファイル名をリストに保存
 filenames = []
 for i in media_urls:
-    #print(i)
 
     #画像URLのリストからURLを取り出してダウンロード
     if type(i) == list:
         #print("list")
         fns = []
         for j in range(len(i)):
-            #print(i[j])
             filename = i[j].split('/')[-1]
             filename = filename[:-5]
             fns.append(filename)
@@ -97,7 +91,6 @@ for i in media_urls:
 
     #動画URLからダウンロード
     elif type(i) == str:
-        #print("str")
         if "orig" in i:
             filename = i.split('/')[-1]
             filename = filename[:-5]
@@ -118,7 +111,6 @@ for i in media_urls:
                 aaa.write(image)
         #urlが''なら何もしない
         elif i == "":
-            #print(i)
             filenames.append("")
 
 
